@@ -1,0 +1,7 @@
+[package]
+name = "nlp100rs"
+version = "0.1.0"
+authors = ["Yasushi Abe <yasushi.abe@gmail.com>"]
+
+[dependencies]
+"rand" = "*"
