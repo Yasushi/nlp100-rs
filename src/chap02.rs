@@ -67,3 +67,25 @@ fn nlp12() {
     // diff -u <(cut -f 2 data/hightemp.txt) target/col2.txt
     assert!(true);
 }
+
+
+/// 13. col1.txtとcol2.txtをマージ
+///
+/// 12で作ったcol1.txtとcol2.txtを結合し，元のファイルの1列目と2列目をタブ区切りで並べたテキストファイルを作成せよ．確認にはpasteコマンドを用いよ．
+#[test]
+fn nlp13() {
+    let f1 = File::open("target/col1.txt").unwrap();
+    let col1:Vec<String> = BufReader::new(f1).lines().map(Result::unwrap).collect();
+
+    let f2 = File::open("target/col2.txt").unwrap();
+    let col2:Vec<String> = BufReader::new(f2).lines().map(Result::unwrap).collect();
+
+    let zip = col1.iter().zip(col2);
+
+    let mut out = File::create("target/paste.txt").unwrap();
+    for t in zip {
+        out.write_fmt(format_args!("{}\t{}\n", t.0, t.1)).unwrap();
+    }
+    // diff -u <(paste target/col1.txt target/col2.txt) target/paste.txt
+    assert!(true);
+}
