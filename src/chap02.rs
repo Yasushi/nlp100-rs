@@ -39,3 +39,31 @@ fn nlp11() {
     // diff -u target/nlp11.txt <( expand -t 1 data/hightemp.txt)
     assert!(true);
 }
+
+/// 12. 1列目をcol1.txtに，2列目をcol2.txtに保存
+///
+/// 各行の1列目だけを抜き出したものをcol1.txtに，2列目だけを抜き出したものをcol2.txtとしてファイルに保存せよ．確認にはcutコマンドを用いよ．
+#[test]
+fn nlp12() {
+    let f = File::open(HIGHTEMP).unwrap();
+    let reader = BufReader::new(f);
+    let mut col1 = Vec::<String>::new();
+    let mut col2 = Vec::<String>::new();
+
+    for line in reader.lines() {
+        if let Ok(line) = line {
+            let mut l = line.split_whitespace();
+            col1.push(l.next().unwrap().to_owned());
+            col2.push(l.next().unwrap().to_owned());
+        }
+    }
+
+    let mut f1 = File::create("target/col1.txt").unwrap();
+    f1.write_fmt(format_args!("{}\n",col1.join("\n"))).unwrap();
+
+    let mut f2 = File::create("target/col2.txt").unwrap();
+    f2.write_fmt(format_args!("{}\n",col2.join("\n"))).unwrap();
+    // diff -u <(cut -f 1 data/hightemp.txt) target/col1.txt
+    // diff -u <(cut -f 2 data/hightemp.txt) target/col2.txt
+    assert!(true);
+}
