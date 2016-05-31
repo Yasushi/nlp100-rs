@@ -4,5 +4,7 @@ version = "0.1.0"
 authors = ["Yasushi Abe <yasushi.abe@gmail.com>"]
 
 [dependencies]
-"rand" = "*"
-"itertools" = "*"
+rand = "0.3.14"
+itertools = "0.4.15"
+flate2 = "0.2.14"
+rustc-serialize = "0.3"
