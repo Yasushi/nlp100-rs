@@ -4,6 +4,8 @@ use flate2::FlateReadExt;
 use std::fs::File;
 #[allow(unused_imports)]
 use std::io::{BufRead, BufReader};
+#[allow(unused_imports)]
+use regex::Regex;
 
 #[allow(unused_imports)]
 use rustc_serialize::json;
@@ -35,4 +37,15 @@ pub fn get_country_text(country: &str) -> Option<String> {
 fn nlp20() {
     let r = get_country_text("イギリス");
     assert!(r.is_some());
+}
+
+/// 21. カテゴリ名を含む行を抽出
+/// 記事中でカテゴリ名を宣言している行を抽出せよ．
+#[test]
+fn nlp21() {
+    let text = get_country_text("イギリス").unwrap();
+    let lines: Vec<&str> = text.split("\n").collect();
+    let cats: Vec<&str> = lines.into_iter().filter(|l| l.contains("[[Category:")).collect();
+    println!("{}\n", cats.join("\n"));
+    assert_eq!(8, cats.len());
 }
