@@ -49,3 +49,25 @@ fn nlp21() {
     println!("{}\n", cats.join("\n"));
     assert_eq!(8, cats.len());
 }
+
+/// 22. カテゴリ名の抽出
+/// 記事のカテゴリ名を（行単位ではなく名前で）抽出せよ．
+#[test]
+fn nlp22() {
+    let text = get_country_text("イギリス").unwrap();
+    let re = Regex::new(r"\[\[Category:(.+?)\]\]").unwrap();
+    let cats: Vec<_> = re.captures_iter(&text).flat_map(|c| c.at(1)).collect();
+    for c in &cats {
+        println!("{}", c);
+    }
+    assert_eq!(cats,
+               vec!["イギリス|*",
+                    "英連邦王国|*",
+                    "G8加盟国",
+                    "欧州連合加盟国",
+                    "海洋国家",
+                    "君主国",
+                    "島国|くれいとふりてん",
+                    "1801年に設立された州・地域"]);
+
+}

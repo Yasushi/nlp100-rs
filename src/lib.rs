@@ -4,7 +4,7 @@ extern crate regex;
 
 mod chap01;
 mod chap02;
-mod chap03;
+pub mod chap03;
 
 #[cfg(test)]
 mod tests {
