@@ -71,3 +71,18 @@ fn nlp22() {
                     "1801年に設立された州・地域"]);
 
 }
+
+/// 23. セクション構造
+/// 記事中に含まれるセクション名とそのレベル（例えば"== セクション名
+/// =="なら1）を表示せよ．
+#[test]
+fn nlp23() {
+    let text = get_country_text("イギリス").unwrap();
+    // let lines: Vec<&str> = text.split("\n").collect();
+    let re = Regex::new(r"(?m)^(=+) *(.+?) *=+").unwrap();
+    let sec: Vec<_> = re.captures_iter(&text).map(|c| (c.at(1).unwrap().len() - 1, c.at(2).unwrap())).collect();
+    for s in &sec {
+        println!("{} {}", s.0, s.1);
+    }
+    assert_eq!(sec.len(), 44);
+}
