@@ -86,3 +86,14 @@ fn nlp23() {
     }
     assert_eq!(sec.len(), 44);
 }
+
+/// 24. ファイル参照の抽出
+/// 記事から参照されているメディアファイルをすべて抜き出せ．
+#[test]
+fn nlp24() {
+    let text = get_country_text("イギリス").unwrap();
+    let re = Regex::new(r"\[\[(?:ファイル|File):(.+?)[\]|]").unwrap();
+    let cs: Vec<_> = re.captures_iter(&text).map(|c| c[1].to_string()).collect();
+    println!("{}", cs.join("\n"));
+    assert_eq!(cs.len(), 19);
+}
