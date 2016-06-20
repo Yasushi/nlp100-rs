@@ -1,6 +1,7 @@
 extern crate flate2;
 extern crate rustc_serialize;
 extern crate regex;
+extern crate itertools;
 
 mod chap01;
 mod chap02;
