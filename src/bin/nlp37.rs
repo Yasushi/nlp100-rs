@@ -29,9 +29,8 @@ pub fn main() {
         .unwrap();
     let stdin = plot.stdin.as_mut().unwrap();
     stdin.write_fmt(format_args!(r#"
-set term pngcairo font "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf,16"
+set term pngcairo
 set output "nlp37.png"
-set xlabel font "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf,16"
 plot "-" using 0:2:xticlabels(1) with boxes notitle
 "#)).unwrap();
 
