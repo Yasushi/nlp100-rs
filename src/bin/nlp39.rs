@@ -11,10 +11,10 @@ use std::io::Write;
 /// プロットせよ．
 pub fn main() {
     let neko = neko();
-    let mut ms: Vec<Morpheme> = (&neko).concat();
+    let mut ms: Vec<Morph> = (&neko).concat();
     ms.sort_by(|a, b| a.surface.cmp(&b.surface));
 
-    let mut hist: Vec<(Morpheme, usize)> = ms.into_iter()
+    let mut hist: Vec<(Morph, usize)> = ms.into_iter()
         .group_by(|m| m.surface.clone())
         .map(|(_, v)| (v[0].clone(), v.len()))
         .collect();

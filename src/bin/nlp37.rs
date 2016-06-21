@@ -11,10 +11,10 @@ use std::io::Write;
 /// 出現頻度が高い10語とその出現頻度をグラフ（例えば棒グラフなど）で表示せよ．
 pub fn main() {
     let neko = neko();
-    let mut ms: Vec<Morpheme> = (&neko).concat();
+    let mut ms: Vec<Morph> = (&neko).concat();
     ms.sort_by(|a, b| a.surface.cmp(&b.surface));
 
-    let mut hist: Vec<(Morpheme, usize)> = ms.into_iter()
+    let mut hist: Vec<(Morph, usize)> = ms.into_iter()
         .group_by(|m| m.surface.clone())
         .map(|(_, v)| (v[0].clone(), v.len()))
         .collect();
@@ -32,7 +32,8 @@ pub fn main() {
 set term pngcairo
 set output "nlp37.png"
 plot "-" using 0:2:xticlabels(1) with boxes notitle
-"#)).unwrap();
+"#))
+        .unwrap();
 
     for &(ref m, c) in hist.iter().take(10) {
         stdin.write_fmt(format_args!("{} {}\n", m.surface, c)).unwrap();

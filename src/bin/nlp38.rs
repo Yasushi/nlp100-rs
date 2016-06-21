@@ -11,7 +11,7 @@ use std::io::Write;
 /// 単語の種類数を棒グラフで表したもの）を描け．
 pub fn main() {
     let neko = neko();
-    let mut ms: Vec<Morpheme> = (&neko).concat();
+    let mut ms: Vec<Morph> = (&neko).concat();
     ms.sort_by(|a, b| a.surface.cmp(&b.surface));
 
     let mut wordhist: Vec<(String, usize)> = ms.into_iter()

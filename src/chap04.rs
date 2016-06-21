@@ -5,30 +5,30 @@ use std::io::{BufRead, BufReader};
 use itertools::Itertools;
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct Morpheme {
+pub struct Morph {
     pub surface: String,
     pub base: String,
     pub pos: String,
     pub pos1: String,
 }
 
-impl Morpheme {
-    fn new(surface: &str, base: &str, pos: &str, pos1: &str) -> Morpheme {
-        Morpheme {
+impl Morph {
+    fn new(surface: &str, base: &str, pos: &str, pos1: &str) -> Morph {
+        Morph {
             surface: surface.to_string(),
             base: base.to_string(),
             pos: pos.to_string(),
             pos1: pos1.to_string(),
         }
     }
-    fn build(line: &str) -> Morpheme {
+    fn build(line: &str) -> Morph {
         let s: Vec<&str> = line.split("\t").collect();
         let a: Vec<&str> = s[1].split(",").collect();
-        Morpheme::new(s[0], a[6], a[0], a[1])
+        Morph::new(s[0], a[6], a[0], a[1])
     }
 }
 
-impl fmt::Display for Morpheme {
+impl fmt::Display for Morph {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f,
                "{},{},{},{}",
@@ -39,7 +39,7 @@ impl fmt::Display for Morpheme {
     }
 }
 
-pub type Sentence = Vec<Morpheme>;
+pub type Sentence = Vec<Morph>;
 
 pub fn neko() -> Vec<Sentence> {
     let f = File::open("data/neko.txt.mecab.ipa").unwrap();
@@ -51,7 +51,7 @@ pub fn neko() -> Vec<Sentence> {
                 result.push(s);
                 s = Vec::new();
             }
-            Ok(l) => s.push(Morpheme::build(&l)),
+            Ok(l) => s.push(Morph::build(&l)),
             _ => unreachable!(),
         }
     }
@@ -68,10 +68,10 @@ pub fn neko() -> Vec<Sentence> {
 #[test]
 fn nlp30() {
     let neko = neko();
-    assert_eq!(neko[0][0], Morpheme::new("一", "一", "名詞", "数"));
+    assert_eq!(neko[0][0], Morph::new("一", "一", "名詞", "数"));
     assert!(neko[1].is_empty());
     assert_eq!(neko[2][1],
-               Morpheme::new("吾輩", "吾輩", "名詞", "代名詞"));
+               Morph::new("吾輩", "吾輩", "名詞", "代名詞"));
 }
 
 /// 31. 動詞
@@ -79,7 +79,7 @@ fn nlp30() {
 #[test]
 fn nlp31() {
     let neko = neko();
-    let verbs: Vec<Morpheme> = neko.into_iter().flat_map(|s| s.into_iter().filter(|m| m.pos == "動詞")).collect();
+    let verbs: Vec<Morph> = neko.into_iter().flat_map(|s| s.into_iter().filter(|m| m.pos == "動詞")).collect();
     for v in &verbs {
         println!("{}", v.surface);
     }
@@ -91,7 +91,7 @@ fn nlp31() {
 #[test]
 fn nlp32() {
     let neko = neko();
-    let verbs: Vec<Morpheme> = neko.into_iter().flat_map(|s| s.into_iter().filter(|m| m.pos == "動詞")).collect();
+    let verbs: Vec<Morph> = neko.into_iter().flat_map(|s| s.into_iter().filter(|m| m.pos == "動詞")).collect();
     for v in &verbs {
         println!("{}", v.base);
     }
@@ -103,7 +103,7 @@ fn nlp32() {
 #[test]
 fn nlp33() {
     let neko = neko();
-    let noun: Vec<Morpheme> = neko.into_iter()
+    let noun: Vec<Morph> = neko.into_iter()
         .flat_map(|s| {
             s.into_iter()
                 .filter(|m| m.pos == "名詞" && m.pos1 == "サ変接続")
@@ -120,7 +120,7 @@ fn nlp33() {
 #[test]
 fn nlp34() {
     let neko = neko();
-    let triplets: Vec<Vec<Morpheme>> = neko.iter()
+    let triplets: Vec<Vec<Morph>> = neko.iter()
         .flat_map(|s| s.windows(3).map(|w| w.to_vec()))
         .filter(|t| t[1].surface == "の" && t[0].pos == "名詞" && t[2].pos == "名詞")
         .collect();
@@ -136,9 +136,9 @@ fn nlp34() {
 #[test]
 fn nlp35() {
     let neko = neko();
-    let mut runs: Vec<Vec<Morpheme>> = Vec::new();
+    let mut runs: Vec<Vec<Morph>> = Vec::new();
     for s in neko {
-        let mut ns: Vec<Morpheme> = Vec::new();
+        let mut ns: Vec<Morph> = Vec::new();
         for v in s {
             if v.pos == "名詞" {
                 ns.push(v);
@@ -150,7 +150,7 @@ fn nlp35() {
             }
         }
     }
-    let runs: Vec<Vec<Morpheme>> = runs.into_iter().filter(|r| r.len() > 1).collect();
+    let runs: Vec<Vec<Morph>> = runs.into_iter().filter(|r| r.len() > 1).collect();
     for r in &runs {
         for m in r {
             print!("{} ", m.surface);
@@ -165,10 +165,10 @@ fn nlp35() {
 #[test]
 fn nlp36() {
     let neko = neko();
-    let mut ms: Vec<Morpheme> = (&neko).concat();
+    let mut ms: Vec<Morph> = (&neko).concat();
     ms.sort_by(|a, b| a.surface.cmp(&b.surface));
 
-    let mut hist: Vec<(Morpheme, usize)> = ms.into_iter()
+    let mut hist: Vec<(Morph, usize)> = ms.into_iter()
         .group_by(|m| m.surface.clone())
         .map(|(_, v)| (v[0].clone(), v.len()))
         .collect();

@@ -8,6 +8,8 @@ mod chap02;
 pub mod chap03;
 pub mod chap04;
 
+pub use chap04::Morph;
+
 #[cfg(test)]
 mod tests {
     #[test]
