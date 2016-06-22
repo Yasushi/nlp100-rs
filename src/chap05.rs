@@ -7,6 +7,7 @@ use std::fs::File;
 use std::fmt;
 use std::io::{BufRead, BufReader};
 use std::str::FromStr;
+use std::ops::Add;
 use itertools::Itertools;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -33,6 +34,15 @@ impl Chunk {
 
     fn is_empty(&self) -> bool {
         self.morphs.is_empty()
+    }
+
+    #[allow(dead_code)]
+    fn join(&self) -> String {
+        let mut result = String::new();
+        for m in &self.morphs {
+            result = result.add(&m.surface.clone());
+        }
+        result
     }
 }
 
@@ -77,6 +87,17 @@ impl Sentence {
     #[allow(dead_code)]
     fn iter(&self) -> slice::Iter<Chunk> {
         self.0.iter()
+    }
+
+    #[allow(dead_code)]
+    fn pair(&self) -> Vec<(&Chunk, &Chunk)> {
+        let mut result = Vec::new();
+        for c in self.iter() {
+            if c.dst >= 0 {
+                result.push((c, &self.0[c.dst as usize]));
+            }
+        }
+        result
     }
 }
 
@@ -142,4 +163,17 @@ fn nlp41() {
         println!("");
     }
     assert!(false);
+}
+
+/// 42. 係り元と係り先の文節の表示
+/// 係り元の文節と係り先の文節のテキストをタブ区切り形式ですべて抽出せ
+/// よ．ただし，句読点などの記号は出力しないようにせよ．
+#[test]
+fn nlp42() {
+    let neko = neko();
+    for s in &neko {
+        for (c1, c2) in s.pair() {
+            println!("{}\t{}", c1.join(), c2.join());
+        }
+    }
 }
