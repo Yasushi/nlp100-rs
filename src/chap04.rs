@@ -13,7 +13,7 @@ pub struct Morph {
 }
 
 impl Morph {
-    fn new(surface: &str, base: &str, pos: &str, pos1: &str) -> Morph {
+    pub fn new(surface: &str, base: &str, pos: &str, pos1: &str) -> Morph {
         Morph {
             surface: surface.to_string(),
             base: base.to_string(),
@@ -21,7 +21,7 @@ impl Morph {
             pos1: pos1.to_string(),
         }
     }
-    fn build(line: &str) -> Morph {
+    pub fn build(line: &str) -> Morph {
         let s: Vec<&str> = line.split("\t").collect();
         let a: Vec<&str> = s[1].split(",").collect();
         Morph::new(s[0], a[6], a[0], a[1])
