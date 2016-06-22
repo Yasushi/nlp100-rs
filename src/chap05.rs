@@ -37,6 +37,11 @@ impl Chunk {
     }
 
     #[allow(dead_code)]
+    fn has_pos(&self, pos: &str) -> bool {
+        self.morphs.iter().any(|m| m.pos == pos)
+    }
+
+    #[allow(dead_code)]
     fn join(&self) -> String {
         let mut result = String::new();
         for m in &self.morphs {
@@ -174,6 +179,24 @@ fn nlp42() {
     for s in &neko {
         for (c1, c2) in s.pair() {
             println!("{}\t{}", c1.join(), c2.join());
+        }
+    }
+}
+
+/// 43. 名詞を含む文節が動詞を含む文節に係るものを抽出
+/// 名詞を含む文節が，動詞を含む文節に係るとき，これらをタブ区切り形式
+/// で抽出せよ．ただし，句読点などの記号は出力しないようにせよ．
+#[test]
+fn nlp43() {
+    let neko = neko();
+    for s in neko {
+        for c in s.iter() {
+            if c.dst >= 0 && c.has_pos("名詞") {
+                let dst = &s.0[c.dst as usize];
+                if dst.has_pos("動詞") {
+                    println!("{}\t{}", c.join(), dst.join());
+                }
+            }
         }
     }
 }
