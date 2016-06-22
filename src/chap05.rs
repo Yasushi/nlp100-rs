@@ -41,8 +41,7 @@ impl Chunk {
         self.morphs.iter().any(|m| m.pos == pos)
     }
 
-    #[allow(dead_code)]
-    fn join(&self) -> String {
+    pub fn join(&self) -> String {
         let mut result = String::new();
         for m in &self.morphs {
             if m.pos != "記号" {
@@ -96,8 +95,7 @@ impl Sentence {
         self.0.iter()
     }
 
-    #[allow(dead_code)]
-    fn pair(&self) -> Vec<(&Chunk, &Chunk)> {
+    pub fn pair(&self) -> Vec<(&Chunk, &Chunk)> {
         let mut result = Vec::new();
         for c in self.iter() {
             if c.dst >= 0 {

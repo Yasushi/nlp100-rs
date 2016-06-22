@@ -7,7 +7,7 @@ mod chap01;
 mod chap02;
 pub mod chap03;
 pub mod chap04;
-mod chap05;
+pub mod chap05;
 
 pub use chap04::Morph;
 pub use chap05::Chunk;
