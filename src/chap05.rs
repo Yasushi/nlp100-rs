@@ -2,6 +2,7 @@ use chap04::Morph;
 
 use std::collections::HashMap;
 use std::iter::FromIterator;
+use std::slice;
 use std::fs::File;
 use std::fmt;
 use std::io::{BufRead, BufReader};
@@ -45,21 +46,37 @@ impl fmt::Display for Chunk {
     }
 }
 
-pub type Sentence = Vec<Chunk>;
+pub struct Sentence(Vec<Chunk>);
 
-fn relations(s: &mut Sentence) {
-    let mut rs: Vec<(usize, isize)> =  s.iter()
-        .map(|c| (c.no, c.dst))
-        .filter(|&(_, dst)| dst >= 0)
-        .collect();
-    rs.sort_by_key(|&(_, dst)| dst);
-    let relmap: HashMap<usize, Vec<usize>> = HashMap::from_iter(rs.into_iter()
-        .group_by(|&(_, dst)| dst)
-        .map(|(dst, ts)| (dst as usize, ts.iter().map(|t| t.0).collect::<Vec<usize>>())));
-    for mut c in s {
-        if let Some(srcs) = relmap.get(&c.no) {
-            c.srcs.extend_from_slice(&srcs);
+impl Sentence {
+    fn new() -> Sentence {
+        Sentence(Vec::new())
+    }
+
+    fn relations(&mut self) {
+        let mut rs: Vec<(usize, isize)> = self.0
+            .iter()
+            .map(|c| (c.no, c.dst))
+            .filter(|&(_, dst)| dst >= 0)
+            .collect();
+        rs.sort_by_key(|&(_, dst)| dst);
+        let relmap: HashMap<usize, Vec<usize>> = HashMap::from_iter(rs.into_iter()
+            .group_by(|&(_, dst)| dst)
+            .map(|(dst, ts)| (dst as usize, ts.iter().map(|t| t.0).collect::<Vec<usize>>())));
+        for mut c in &mut self.0 {
+            if let Some(srcs) = relmap.get(&c.no) {
+                c.srcs.extend_from_slice(&srcs);
+            }
         }
+    }
+
+    fn push(&mut self, c: Chunk) {
+        self.0.push(c);
+    }
+
+    #[allow(dead_code)]
+    fn iter(&self) -> slice::Iter<Chunk> {
+        self.0.iter()
     }
 }
 
@@ -67,7 +84,7 @@ fn relations(s: &mut Sentence) {
 pub fn neko() -> Vec<Sentence> {
     let f = File::open("data/neko.txt.cabocha").unwrap();
     let mut result: Vec<Sentence> = Vec::new();
-    let mut s: Sentence = Vec::new();
+    let mut s = Sentence::new();
     let mut c = Chunk::new();
     for line in BufReader::new(f).lines() {
         match line {
@@ -76,9 +93,9 @@ pub fn neko() -> Vec<Sentence> {
                     s.push(c);
                 }
                 c = Chunk::new();
-                relations(&mut s);
+                s.relations();
                 result.push(s);
-                s = Vec::new();
+                s = Sentence::new();
             }
             Ok(ref l) if l.starts_with("* ") => {
                 if !c.is_empty() {
@@ -118,8 +135,8 @@ pub fn neko() -> Vec<Sentence> {
 #[test]
 fn nlp41() {
     let neko = neko();
-    for s in neko.iter().skip(7).take(1) {
-        for c in s {
+    for ref s in neko.iter().skip(7).take(1) {
+        for c in s.iter() {
             print!("{}", c);
         }
         println!("");
