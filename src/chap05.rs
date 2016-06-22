@@ -45,7 +45,9 @@ impl Chunk {
     fn join(&self) -> String {
         let mut result = String::new();
         for m in &self.morphs {
-            result = result.add(&m.surface.clone());
+            if m.pos != "記号" {
+                result = result.add(&m.surface.clone());
+            }
         }
         result
     }
