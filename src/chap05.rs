@@ -41,6 +41,11 @@ impl Chunk {
         self.morphs.iter().any(|m| m.pos == pos)
     }
 
+    #[allow(dead_code)]
+    fn only_pos(&self, pos: &str) -> bool {
+        self.morphs.iter().all(|m| m.pos == pos)
+    }
+
     pub fn join(&self) -> String {
         let mut result = String::new();
         for m in &self.morphs {
@@ -98,7 +103,7 @@ impl Sentence {
     pub fn pair(&self) -> Vec<(&Chunk, &Chunk)> {
         let mut result = Vec::new();
         for c in self.iter() {
-            if c.dst >= 0 {
+            if c.dst >= 0 && !c.only_pos("記号") {
                 result.push((c, &self.0[c.dst as usize]));
             }
         }
