@@ -37,13 +37,18 @@ impl Chunk {
     }
 
     #[allow(dead_code)]
-    fn has_pos(&self, pos: &str) -> bool {
+    pub fn has_pos(&self, pos: &str) -> bool {
         self.morphs.iter().any(|m| m.pos == pos)
     }
 
     #[allow(dead_code)]
-    fn only_pos(&self, pos: &str) -> bool {
+    pub fn only_pos(&self, pos: &str) -> bool {
         self.morphs.iter().all(|m| m.pos == pos)
+    }
+
+    #[allow(dead_code)]
+    pub fn get_predicate(&self) -> Option<&Morph> {
+        self.morphs.iter().filter(|m| m.pos == "動詞").next()
     }
 
     pub fn join(&self) -> String {
@@ -59,11 +64,12 @@ impl Chunk {
 
 impl fmt::Display for Chunk {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "* {} {} {:?}\n", self.no, self.dst, self.srcs));
-        for m in &self.morphs {
-            try!(write!(f, "{}", m.surface));
-        }
-        write!(f, "\n")
+        write!(f,
+               "* {} {} {:?} {}",
+               self.no,
+               self.dst,
+               self.srcs,
+               self.morphs.iter().map(|m| m.surface.clone()).collect::<Vec<_>>().as_slice().join(""))
     }
 }
 
@@ -96,8 +102,12 @@ impl Sentence {
     }
 
     #[allow(dead_code)]
-    fn iter(&self) -> slice::Iter<Chunk> {
+    pub fn iter(&self) -> slice::Iter<Chunk> {
         self.0.iter()
+    }
+
+    pub fn get_chunks(&self, srcs: &[usize]) -> Vec<&Chunk> {
+        srcs.iter().map(|&i| &self.0[i]).collect()
     }
 
     pub fn pair(&self) -> Vec<(&Chunk, &Chunk)> {
