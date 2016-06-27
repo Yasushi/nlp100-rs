@@ -51,6 +51,10 @@ impl Chunk {
         self.morphs.iter().filter(|m| m.pos == "動詞").next().cloned()
     }
 
+    pub fn get_by_pos(&self, pos: &str) -> Vec<Morph> {
+        self.morphs.iter().filter(|m| m.pos == pos).cloned().collect()
+    }
+
     pub fn join(&self) -> String {
         let mut result = String::new();
         for m in &self.morphs {
