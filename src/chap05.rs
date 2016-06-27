@@ -123,6 +123,19 @@ impl Sentence {
         }
         result
     }
+
+    pub fn get_path(&self, c: &Chunk) -> Vec<Chunk> {
+        let mut result = vec![c.clone()];
+        let mut dst = c.dst;
+        loop {
+            if dst < 0 {
+                return result;
+            }
+            let ch = &self.0[dst as usize];
+            result.push(ch.clone());
+            dst = ch.dst;
+        }
+    }
 }
 
 #[allow(dead_code)]
