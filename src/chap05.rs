@@ -47,8 +47,8 @@ impl Chunk {
     }
 
     #[allow(dead_code)]
-    pub fn get_predicate(&self) -> Option<&Morph> {
-        self.morphs.iter().filter(|m| m.pos == "動詞").next()
+    pub fn get_predicate(&self) -> Option<Morph> {
+        self.morphs.iter().filter(|m| m.pos == "動詞").next().cloned()
     }
 
     pub fn join(&self) -> String {
@@ -106,15 +106,15 @@ impl Sentence {
         self.0.iter()
     }
 
-    pub fn get_chunks(&self, srcs: &[usize]) -> Vec<&Chunk> {
-        srcs.iter().map(|&i| &self.0[i]).collect()
+    pub fn get_chunks(&self, srcs: &[usize]) -> Vec<Chunk> {
+        srcs.iter().map(|&i| self.0[i].clone()).collect()
     }
 
-    pub fn pair(&self) -> Vec<(&Chunk, &Chunk)> {
+    pub fn pair(&self) -> Vec<(Chunk, Chunk)> {
         let mut result = Vec::new();
         for c in self.iter() {
             if c.dst >= 0 && !c.only_pos("記号") {
-                result.push((c, &self.0[c.dst as usize]));
+                result.push((c.clone(), self.0[c.dst as usize].clone()));
             }
         }
         result
@@ -178,11 +178,11 @@ fn nlp41() {
     let neko = neko();
     for ref s in neko.iter().skip(7).take(1) {
         for c in s.iter() {
-            print!("{}", c);
+            print!("{}", c.join());
         }
         println!("");
     }
-    assert!(false);
+    assert!(true);
 }
 
 /// 42. 係り元と係り先の文節の表示

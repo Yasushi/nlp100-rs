@@ -26,7 +26,7 @@ pub fn main() {
         let stdin = dot.stdin.as_mut().unwrap();
         write!(stdin, "digraph {{").unwrap();
         let neko = neko();
-        for &(c1, c2) in &neko[no].pair() {
+        for &(ref c1, ref c2) in &neko[no].pair() {
             write!(stdin, "\"{}\" -> \"{}\"", c1.join(), c2.join()).unwrap();
         }
         write!(stdin, "}}").unwrap();
