@@ -136,6 +136,22 @@ impl Sentence {
             dst = ch.dst;
         }
     }
+
+    pub fn get_path_until(&self, c: &Chunk, until: &Chunk) -> Option<Vec<Chunk>> {
+        let mut result = vec![c.clone()];
+        let mut dst = c.dst;
+        loop {
+            if dst < 0 {
+                return None;
+            }
+            let ch = &self.0[dst as usize];
+            result.push(ch.clone());
+            dst = ch.dst;
+            if ch.no == until.no {
+                return Some(result);
+            }
+        }
+    }
 }
 
 #[allow(dead_code)]
