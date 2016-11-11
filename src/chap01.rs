@@ -18,7 +18,7 @@ pub fn reverse(s: &str) -> String {
 
 // 文字列"stressed"の文字を逆に（末尾から先頭に向かって）並べた文字列を得よ．
 #[test]
-pub fn nlp00() {
+fn nlp00() {
     assert!(String::from_iter("stressed".chars().rev().collect::<Vec<_>>()) == "desserts");
     assert!(reverse("stressed") == "desserts");
 }
@@ -27,7 +27,7 @@ pub fn nlp00() {
 ///
 /// 「パタトクカシーー」という文字列の1,3,5,7文字目を取り出して連結した文字列を得よ．
 #[test]
-pub fn nlp01() {
+fn nlp01() {
     let s = "パタトクカシーー";
     let r = String::from_iter(s.char_indices().filter(|&(i, _)| i % 2 == 0).map(|(_, s)| s));
     println!("r={}", r);
@@ -38,7 +38,7 @@ pub fn nlp01() {
 ///
 ///「パトカー」＋「タクシー」の文字を先頭から交互に連結して文字列「パタトクカシーー」を得よ．
 #[test]
-pub fn nlp02() {
+fn nlp02() {
     let p = "パトカー";
     let t = "タクシー";
     let r = String::from_iter(p.chars().zip(t.chars()).flat_map(|(a, b)| vec![a, b]));
@@ -50,7 +50,7 @@ pub fn nlp02() {
 /// "Now I need a drink, alcoholic of course, after the heavy lectures involving quantum mechanics." 
 /// という文を単語に分解し，各単語の（アルファベットの）文字数を先頭から出現順に並べたリストを作成せよ．
 #[test]
-pub fn nlp03() {
+fn nlp03() {
     let s = "Now I need a drink, alcoholic of course, after the heavy lectures involving quantum \
              mechanics.";
     let cs: Vec<_> = s.split_whitespace()
@@ -69,7 +69,7 @@ pub fn nlp03() {
 /// から単語の位置（先頭から何番目の単語か）への連想配列（辞書型もしく
 /// はマップ型）を作成せよ．
 #[test]
-pub fn nlp04() {
+fn nlp04() {
     let s = "Hi He Lied Because Boron Could Not Oxidize Fluorine. New Nations Might Also Sign \
              Peace Security Clause. Arthur King Can.";
     let single = vec![1, 5, 6, 7, 8, 9, 15, 16, 19];
